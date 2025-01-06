@@ -12,6 +12,8 @@ export default function Home() {
     setTranscription(text)
   }
 
+  
+
   return (
     <main className="min-h-screen bg-[#11151d] text-gray-100 p-8">
       <div className="container mx-auto max-w-4xl">
@@ -24,10 +26,10 @@ export default function Home() {
           </div>
           <div className="bg-gray-800 p-6 rounded-lg">
             <h2 className="text-xl font-semibold mb-4">Upload Audio File</h2>
-            <FileUploader onTranscriptionComplete={handleTranscriptionComplete} />
+            <FileUploader onTranscriptionComplete={handleTranscriptionComplete}/>
           </div>
         </div>
-        <TranscriptionDisplay transcription={transcription} />
+        <TranscriptionDisplay transcription={transcription}  />
       </div>
     </main>
   )

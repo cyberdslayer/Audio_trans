@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { Button } from '@/components/ui/button'
-import { Upload, AlertCircle, Play, Pause } from 'lucide-react'
+import { Upload, AlertCircle, Play, Pause} from 'lucide-react'
 
 interface FileUploaderProps {
   onTranscriptionComplete: (text: string) => void
@@ -21,30 +21,57 @@ export default function FileUploader({ onTranscriptionComplete }: FileUploaderPr
     }
   }
 
+  // const handleUpload = async () => {
+  //   if (file) {
+  //     const formData = new FormData()
+  //     formData.append('audio', file)
+
+  //     try {
+  //       const response = await fetch(`${process.env.FASTAPI_URL}/api/transcribe`, {
+  //         method: 'POST',
+  //         body: formData,
+  //       })
+
+  //       if (response.ok) {
+  //         const data = await response.json()
+  //         console.log('Transcription:', data.text)
+  //         onTranscriptionComplete(data.text)
+  //       } else {
+  //         setError('Transcription failed. Please try again.')
+  //       }
+  //     } catch (error) {
+  //       console.error('Error during transcription:', error)
+  //       setError('An error occurred during transcription. Please try again.')
+  //     }
+  //   }
+  // }
   const handleUpload = async () => {
-    if (file) {
-      const formData = new FormData()
-      formData.append('audio', file)
-
-      try {
-        const response = await fetch('/api/transcribe', {
-          method: 'POST',
-          body: formData,
-        })
-
-        if (response.ok) {
-          const data = await response.json()
-          console.log('Transcription:', data.text)
-          onTranscriptionComplete(data.text)
-        } else {
-          setError('Transcription failed. Please try again.')
-        }
-      } catch (error) {
-        console.error('Error during transcription:', error)
-        setError('An error occurred during transcription. Please try again.')
-      }
+    if (!file) {
+      alert("Please select a file first!");
+      return;
     }
-  }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/transcribe`, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to transcribe the audio file.");
+      }
+
+      const data = await response.json();
+      onTranscriptionComplete(data.text);
+    } catch (error) {
+      console.error(error);
+      alert("An error occurred while transcribing the audio.");
+    }
+  };
+  
 
   const togglePlayPause = () => {
     if (audioRef.current) {
@@ -78,10 +105,10 @@ export default function FileUploader({ onTranscriptionComplete }: FileUploaderPr
           <div className="flex items-center justify-between bg-gray-700 p-2 rounded">
             <span className="text-sm truncate text-gray-300">{file.name}</span>
             <div className="flex items-center space-x-2">
-              {/* <Button onClick={togglePlayPause} variant="outline" size="sm" className="flex items-center bg-gray-600 hover:bg-gray-500">
+              <Button onClick={togglePlayPause} variant="outline" size="sm" className="flex items-center bg-gray-600 hover:bg-gray-500">
                 {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
                 <span className="ml-2">{isPlaying ? 'Pause' : 'Play'}</span>
-              </Button> */}
+              </Button>
               <Button onClick={handleUpload} className="bg-green-600 hover:bg-green-700">Upload and Transcribe</Button>
             </div>
           </div>

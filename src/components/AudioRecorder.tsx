@@ -68,13 +68,16 @@ export default function AudioRecorder({ onTranscriptionComplete }: AudioRecorder
   const handleTranscribe = async () => {
     if (audioBlob) {
       const formData = new FormData()
-      formData.append('audio', audioBlob, 'recording.wav')
+      formData.append('file', audioBlob, 'recording.wav')
 
       try {
-        const response = await fetch('/api/transcribe', {
-          method: 'POST',
+        console.log('Recorded susscessfully');
+
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/transcribe`, {
+          method: "POST",
           body: formData,
-        })
+        });
+
 
         if (response.ok) {
           const data = await response.json()

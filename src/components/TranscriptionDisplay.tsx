@@ -16,7 +16,7 @@ export default function TranscriptionDisplay({ transcription }: TranscriptionDis
     if (transcription) {
       try {
         setIsPlaying(true)
-        const response = await fetch('/api/synthesize', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/synthesize`,{
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
